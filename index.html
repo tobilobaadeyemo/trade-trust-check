@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trade Trust Check · Verify a counterparty before you trade</title>
+<meta name="description" content="A free zero-trust verification aid for cross-border trade. Run a live domain check and score how verifiable a supplier or buyer is before you commit money." />
+<meta name="theme-color" content="#ffffff" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2300ff88'/%3E%3Cpath d='M9 16l5 5 9-10' stroke='%2304291b' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<meta property="og:title" content="Trade Trust Check" />
+<meta property="og:description" content="Apply zero-trust to a trade counterparty before you wire money. Live domain check plus a transparent verifiability score." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" />
+<style>
+  :root{
+    --green:#00ff88; --ink-green:#00794a; --ink:#18181b; --muted:#52555e; --faint:#80848d;
+    --line:#e6e7eb; --surface:#fff; --surf2:#f3f4f6; --radius:18px;
+    --amber:#b45309; --red:#b91c1c;
+  }
+  *{box-sizing:border-box}
+  body{font-family:Manrope,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:#fff;margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  a{color:var(--ink-green)}
+  header{padding:48px 0 8px}
+  .kick{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-green)}
+  .kick::before{content:"";width:22px;height:2px;background:var(--ink-green);border-radius:2px}
+  h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.04;margin:14px 0 0}
+  .lede{color:var(--muted);font-size:1.05rem;max-width:48ch;margin:14px 0 0}
+  .disclaimer{font-size:.8rem;color:var(--faint);background:var(--surf2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:inline-block;margin-top:18px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(20,22,27,.05),0 8px 24px -16px rgba(20,22,27,.18);padding:26px}
+  section{margin-top:26px}
+  .step{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  h2{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;margin:4px 0 0}
+  .sub{color:var(--muted);font-size:.92rem;margin:6px 0 0}
+  .domain-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  input[type=text]{flex:1;min-width:220px;font:inherit;font-size:1rem;padding:13px 16px;border:1px solid var(--line);border-radius:12px;outline:none}
+  input[type=text]:focus{border-color:var(--ink-green);box-shadow:0 0 0 3px rgba(0,121,74,.15)}
+  button.go{font:inherit;font-weight:700;background:var(--green);color:#04291b;border:0;border-radius:12px;padding:13px 22px;cursor:pointer;transition:transform .1s}
+  button.go:active{transform:scale(.98)}
+  button.go:disabled{opacity:.5;cursor:default}
+  #domain-result{margin-top:16px}
+  .dr{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surf2)}
+  .dr-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .pill{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:999px}
+  .pill.good{background:rgba(0,121,74,.12);color:var(--ink-green)}
+  .pill.warn{background:#fef3c7;color:var(--amber)}
+  .pill.bad{background:#fee2e2;color:var(--red)}
+  .pill.unknown{background:var(--line);color:var(--muted)}
+  .dr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px}
+  .dr-grid div span{display:block;font-size:.72rem;color:var(--faint);font-weight:600}
+  .dr-grid div b{font-size:.95rem}
+  .pillar{border-top:1px solid var(--line);padding:18px 0}
+  .pillar:first-child{border-top:0}
+  .pillar h3{font-size:1.02rem;margin:0;font-weight:700}
+  .pillar .q{color:var(--faint);font-size:.82rem;font-weight:600;margin-top:2px}
+  label.chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;cursor:pointer}
+  label.chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--ink-green);flex-shrink:0}
+  label.chk span{font-size:.95rem}
+  .scorebar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);margin-top:30px;padding:16px 0}
+  .score-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .score-num{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+  .verdict{font-weight:700;font-size:1.05rem}
+  .verdict small{display:block;font-weight:500;font-size:.84rem;color:var(--muted);margin-top:2px}
+  .track{flex:1;min-width:160px;height:10px;background:var(--surf2);border-radius:999px;overflow:hidden}
+  .track i{display:block;height:100%;background:var(--green);border-radius:999px;transition:width .35s cubic-bezier(.2,0,0,1)}
+  #next{margin-top:8px}
+  #next li{margin:6px 0;color:var(--muted);font-size:.92rem}
+  footer{margin:50px 0 40px;border-top:1px solid var(--line);padding-top:22px;color:var(--faint);font-size:.86rem}
+  footer a{font-weight:600}
+  @media (max-width:560px){.score-num{font-size:2rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kick">Trade Trust Check</p>
+    <h1>Verify before you trade.</h1>
+    <p class="lede">Cross-border trade fails on trust, not capital. This applies zero-trust to a counterparty: assume nothing, verify what you can, and see how exposed you are before you send money.</p>
+    <span class="disclaimer">A structured verification aid. Not legal, financial, or compliance advice.</span>
+  </header>
+
+  <!-- Step 1: live domain check -->
+  <section class="card">
+    <p class="step">Step 1 · Live signal</p>
+    <h2>Who is the actor?</h2>
+    <p class="sub">A counterparty's domain is the cheapest identity signal to check. A domain registered last month is a different risk than one trading since 2009. This runs a live registration lookup (public RDAP data).</p>
+    <div class="domain-row">
+      <input type="text" id="domain" placeholder="supplier-domain.com" autocomplete="off" spellcheck="false" />
+      <button class="go" id="check">Check domain</button>
+    </div>
+    <div id="domain-result"></div>
+  </section>
+
+  <!-- Step 2: zero-trust checklist -->
+  <section class="card">
+    <p class="step">Step 2 · What can you prove?</p>
+    <h2>The verification checklist</h2>
+    <p class="sub">Check only what you have independently verified yourself, not what the counterparty told you. The four pillars come from the questions any zero-trust system asks.</p>
+    <div id="pillars"></div>
+  </section>
+
+  <!-- Score -->
+  <div class="scorebar">
+    <div class="wrap" style="padding:0">
+      <div class="score-inner">
+        <div class="score-num"><span id="score">0</span><span style="font-size:1rem;color:var(--faint)">/100</span></div>
+        <div style="flex:1;min-width:200px">
+          <div class="verdict" id="verdict">Unverified<small id="verdict-sub">Run the checks above.</small></div>
+        </div>
+        <div class="track"><i id="track" style="width:0%"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <p class="step">Verify next</p>
+    <h2>Close these gaps before you commit</h2>
+    <ul id="next"><li class="sub">Your highest-value unverified items will appear here.</li></ul>
+  </section>
+
+  <footer>
+    Built by <a href="https://tobilobaadeyemo.com" target="_blank" rel="noopener">Tobiloba Adeyemo</a>, Cloud Security Engineer. Open source, no data leaves your browser.
+    <a href="https://github.com/tobilobaadeyemo/trade-trust-check" target="_blank" rel="noopener">View on GitHub</a>.
+  </footer>
+</div>
+
+<script>
+// ---- Verification rubric: 4 zero-trust pillars, transparent weights ----
+const PILLARS = [
+  { name: "Identity", q: "Who is the actor?", items: [
+    { w: 8, t: "Legal business registration number I can look up in a registry" },
+    { w: 5, t: "Physical address that checks out (maps, not just a PO box)" },
+    { w: 5, t: "Domain registered to the business name, not brand-new" },
+    { w: 4, t: "Same identity across website, LinkedIn and the registry" },
+  ]},
+  { name: "Provability", q: "What can they prove?", items: [
+    { w: 8, t: "Trade references I contacted directly, not a list they sent" },
+    { w: 5, t: "Third-party reviews or ratings, not testimonials on their own site" },
+    { w: 6, t: "Product samples received, or a factory audit / video walkthrough" },
+    { w: 4, t: "Verifiable years in business" },
+  ]},
+  { name: "Authorization", q: "What are they authorized to do?", items: [
+    { w: 7, t: "Export or business licence sighted (a copy I can verify)" },
+    { w: 8, t: "Bank account is in the business's exact legal name" },
+    { w: 5, t: "Customs / compliance paperwork for this product class" },
+  ]},
+  { name: "Resilience", q: "What if we assume breach?", items: [
+    { w: 8, t: "Staged or escrow payment, not 100% upfront" },
+    { w: 6, t: "Independent inspection before the final payment releases" },
+    { w: 5, t: "Written contract naming jurisdiction and recourse" },
+    { w: 3, t: "I could absorb the loss if the first order goes to zero" },
+  ]},
+];
+const CHECKLIST_MAX = PILLARS.reduce((s,p)=>s+p.items.reduce((a,i)=>a+i.w,0),0); // sum of weights
+const DOMAIN_MAX = 18; // domain signal worth up to 18 of 100
+const TOTAL_W = CHECKLIST_MAX + DOMAIN_MAX;
+
+let domainScore = 0, domainKnown = false;
+
+// ---- Build checklist UI ----
+const pc = document.getElementById("pillars");
+PILLARS.forEach((p, pi) => {
+  const d = document.createElement("div");
+  d.className = "pillar";
+  d.innerHTML = `<h3>${p.name}</h3><div class="q">${p.q}</div>`;
+  p.items.forEach((it, ii) => {
+    const id = `c_${pi}_${ii}`;
+    const lab = document.createElement("label");
+    lab.className = "chk";
+    lab.innerHTML = `<input type="checkbox" data-w="${it.w}" data-t="${it.t.replace(/"/g,'&quot;')}" id="${id}"><span>${it.t}</span>`;
+    d.appendChild(lab);
+  });
+  pc.appendChild(d);
+});
+
+// ---- Scoring ----
+function recompute(){
+  let got = 0;
+  const unmet = [];
+  document.querySelectorAll('#pillars input[type=checkbox]').forEach(cb=>{
+    const w = +cb.dataset.w;
+    if (cb.checked) got += w;
+    else unmet.push({ w, t: cb.dataset.t });
+  });
+  const raw = got + domainScore;
+  const pct = Math.round((raw / TOTAL_W) * 100);
+  document.getElementById("score").textContent = pct;
+  document.getElementById("track").style.width = pct + "%";
+
+  let v, sub, col;
+  if (pct >= 80){ v="Strong verification"; sub="Proceed with normal caution and a written contract."; col="var(--ink-green)"; }
+  else if (pct >= 55){ v="Partial verification"; sub="Close the gaps below before any funds move."; col="var(--amber)"; }
+  else if (pct >= 30){ v="Weak verification"; sub="High risk. Verify the flagged items before committing."; col="var(--red)"; }
+  else { v="Unverified"; sub="Do not send money yet. Start with the items below."; col="var(--red)"; }
+  const vEl = document.getElementById("verdict");
+  vEl.style.color = col;
+  vEl.innerHTML = `${v}<small id="verdict-sub">${sub}</small>`;
+
+  // top unmet by weight
+  unmet.sort((a,b)=>b.w-a.w);
+  const next = document.getElementById("next");
+  if (!unmet.length){ next.innerHTML = `<li class="sub">Every checklist item is verified. Keep the contract and escrow terms in writing.</li>`; }
+  else next.innerHTML = unmet.slice(0,5).map(u=>`<li><b>${u.t}</b></li>`).join("");
+}
+document.getElementById("pillars").addEventListener("change", recompute);
+
+// ---- Live domain check (RDAP, public, no key) ----
+function yearsBetween(a,b){ return (b-a)/(365.25*24*3600*1000); }
+async function checkDomain(){
+  const raw = document.getElementById("domain").value.trim().toLowerCase()
+    .replace(/^https?:\/\//,"").replace(/^www\./,"").replace(/\/.*$/,"");
+  const box = document.getElementById("domain-result");
+  if (!raw || !raw.includes(".")){ box.innerHTML = `<div class="dr">Enter a domain like <b>supplier.com</b>.</div>`; return; }
+  box.innerHTML = `<div class="dr">Checking <b>${raw}</b> ...</div>`;
+  try{
+    const r = await fetch("https://rdap.org/domain/" + encodeURIComponent(raw), { headers:{ "Accept":"application/rdap+json" }});
+    if (!r.ok) throw new Error("not found");
+    const d = await r.json();
+    const ev = {}; (d.events||[]).forEach(e=>ev[e.eventAction]=e.eventDate);
+    const reg = ev.registration ? new Date(ev.registration) : null;
+    const exp = ev.expiration ? new Date(ev.expiration) : null;
+    let registrar = "Unknown";
+    (d.entities||[]).forEach(en=>{ if((en.roles||[]).includes("registrar")){ const vc=(en.vcardArray||[])[1]||[]; vc.forEach(f=>{ if(f[0]==="fn") registrar=f[3]; }); }});
+    const ageYrs = reg ? yearsBetween(reg, new Date()) : null;
+
+    let pillClass, pillText;
+    if (ageYrs === null){ domainScore = DOMAIN_MAX*0.4; pillClass="unknown"; pillText="Age unknown"; }
+    else if (ageYrs >= 3){ domainScore = DOMAIN_MAX; pillClass="good"; pillText=`Established · ${ageYrs.toFixed(1)} yrs`; }
+    else if (ageYrs >= 1){ domainScore = DOMAIN_MAX*0.6; pillClass="warn"; pillText=`Young · ${ageYrs.toFixed(1)} yrs`; }
+    else { domainScore = DOMAIN_MAX*0.15; pillClass="bad"; pillText=`New · ${(ageYrs*12).toFixed(0)} mo`; }
+    domainKnown = true;
+
+    const fmt = (dt)=> dt ? dt.toISOString().slice(0,10) : "—";
+    box.innerHTML = `<div class="dr">
+      <div class="dr-top"><b>${raw}</b><span class="pill ${pillClass}">${pillText}</span></div>
+      <div class="dr-grid">
+        <div><span>Registered</span><b>${fmt(reg)}</b></div>
+        <div><span>Expires</span><b>${fmt(exp)}</b></div>
+        <div><span>Registrar</span><b>${registrar}</b></div>
+      </div>
+      <p class="sub" style="margin-top:12px">${ageYrs!==null && ageYrs<1 ? "A domain this new is the single most common red flag in supplier fraud. Weight everything else heavily." : "Registration data is a signal, not proof. Confirm the business behind it."}</p>
+    </div>`;
+  } catch(e){
+    domainScore = DOMAIN_MAX*0.3; domainKnown = false;
+    box.innerHTML = `<div class="dr"><div class="dr-top"><b>${raw}</b><span class="pill unknown">No record found</span></div>
+      <p class="sub" style="margin-top:10px">No public registration record returned. That is itself worth a question: verify the business through a registry or references instead.</p></div>`;
+  }
+  recompute();
+}
+document.getElementById("check").addEventListener("click", checkDomain);
+document.getElementById("domain").addEventListener("keydown", e=>{ if(e.key==="Enter") checkDomain(); });
+recompute();
+</script>
+</body>
+</html>
