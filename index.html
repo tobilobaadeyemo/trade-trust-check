@@ -5,89 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trade Trust Check · Verify a counterparty before you trade</title>
 <meta name="description" content="A free zero-trust verification aid for cross-border trade. Run a live domain check and score how verifiable a supplier or buyer is before you commit money." />
-<meta name="theme-color" content="#ffffff" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23fcfc62'/%3E%3Cpath d='M9 16l5 5 9-10' stroke='%23070912' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<meta name="theme-color" content="#0b0d0f" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2300794a'/%3E%3Cpath d='M9 16l5 5 9-10' stroke='%23ffffff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta property="og:image" content="https://tobilobaadeyemo.github.io/trade-trust-check/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://tobilobaadeyemo.github.io/trade-trust-check/og.png" />
 <meta property="og:title" content="Trade Trust Check" />
 <meta property="og:description" content="Apply zero-trust to a trade counterparty before you wire money. Live domain check plus a transparent verifiability score." />
 <meta property="og:type" content="website" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" />
 <style>
-  /* Raptview house style: white, near-black ink, Plus Jakarta Sans, yellow pill
-     CTA, orange accent, soft grey surfaces. */
+  /* Tobiloba Adeyemo house style: Switzer, white canvas, deep-green foreground
+     (#00794a, legible on white), electric green (#00ff88) as fills on the dark
+     band only, near-black band (#0b0d0f), tight 14px radius. */
   :root{
     --ink:#0b0e12; --muted:#5b616b; --faint:#878d97;
-    --line:#e0e3e9; --surface:#fff; --surf2:#edeff4; --radius:16px;
-    --yellow:#fcfc62; --on-yellow:#07090c; --orange:#ff5a1f;
-    --good:#0a8a4f; --amber:#c2410c; --red:#d12626;
+    --line:#e6e7eb; --surface:#fff; --surf2:#f3f4f6; --radius:14px;
+    --signal:#00794a; --brand:#00ff88; --band:#0b0d0f;
+    --good:#00794a; --amber:#b45309; --red:#c2362f;
   }
   *{box-sizing:border-box}
-  body{font-family:"Plus Jakarta Sans",-apple-system,Segoe UI,sans-serif;color:var(--ink);background:#fff;margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth}
+  body{font-family:"Switzer",-apple-system,Segoe UI,sans-serif;color:var(--ink);background:#fff;margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
   .wrap{max-width:880px;margin:0 auto;padding:0 20px}
-  a{color:var(--ink);text-decoration-color:var(--orange)}
-  header{padding:48px 0 8px}
-  .kick{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange)}
-  .kick::before{content:"";width:22px;height:2px;background:var(--orange);border-radius:2px}
-  h1{font-size:clamp(2.1rem,6vw,3.4rem);font-weight:800;letter-spacing:-.035em;line-height:1.02;margin:14px 0 0}
-  .lede{color:var(--muted);font-size:1.05rem;max-width:48ch;margin:14px 0 0}
-  .disclaimer{font-size:.8rem;color:var(--faint);background:var(--surf2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:inline-block;margin-top:18px}
-  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(11,14,18,.05),0 10px 28px -18px rgba(11,14,18,.22);padding:26px}
-  section{margin-top:26px}
-  .step{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-  h2{font-size:1.4rem;font-weight:800;letter-spacing:-.025em;margin:4px 0 0}
-  .sub{color:var(--muted);font-size:.92rem;margin:6px 0 0}
-  .domain-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-  input[type=text]{flex:1;min-width:220px;font:inherit;font-size:1rem;padding:13px 16px;border:1px solid var(--line);border-radius:12px;outline:none}
-  input[type=text]:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,90,31,.14)}
-  button.go{font:inherit;font-weight:700;background:var(--yellow);color:var(--on-yellow);border:0;border-radius:999px;padding:13px 24px;cursor:pointer;transition:transform .1s,box-shadow .2s;box-shadow:0 2px 0 rgba(11,14,18,.12)}
-  button.go:hover{box-shadow:0 4px 14px -4px rgba(252,252,98,.9)}
+  a{color:var(--ink);text-decoration-color:var(--signal);text-underline-offset:2px}
+  .kick{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+  h1{font-size:clamp(2.2rem,6.4vw,3.6rem);font-weight:600;letter-spacing:-.04em;line-height:1.0;margin:16px 0 0}
+  .lede{color:var(--muted);font-size:1.06rem;max-width:50ch;margin:16px 0 0;line-height:1.55}
+  .disclaimer{font-size:.8rem;color:var(--faint);background:var(--surf2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:inline-block;margin-top:20px}
+
+  /* Dark hero band - matches the site's premium near-black sections so the
+     click-through from tobilobaadeyemo.com feels like one brand. */
+  .band{background:var(--band);color:#fff}
+  .hero{padding:30px 0 64px}
+  .brand{display:inline-flex;align-items:center;gap:9px;color:#fff;text-decoration:none;font-weight:600;font-size:.92rem;opacity:.92;margin-bottom:24px}
+  .brand:hover{opacity:1}
+  .brand img{height:26px;width:auto;display:block}
+  .hero .kick{color:var(--brand)}
+  .hero h1{color:#fff}
+  .hero h1 em{font-style:normal;color:var(--brand)}
+  .hero .lede{color:rgba(255,255,255,.66)}
+  .hero .disclaimer{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:rgba(255,255,255,.66)}
+
+  main{margin-top:-40px;position:relative;z-index:1}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(11,14,18,.04),0 18px 40px -24px rgba(11,14,18,.30);padding:26px}
+  section{margin-top:18px}
+  .step{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--signal)}
+  h2{font-size:1.4rem;font-weight:600;letter-spacing:-.02em;margin:6px 0 0}
+  .sub{color:var(--muted);font-size:.92rem;margin:8px 0 0;line-height:1.5}
+  .domain-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  input[type=text]{flex:1;min-width:220px;font:inherit;font-size:1rem;padding:13px 16px;border:1px solid var(--line);border-radius:11px;outline:none;transition:border-color .15s,box-shadow .15s}
+  input[type=text]:focus{border-color:var(--signal);box-shadow:0 0 0 3px rgba(0,121,74,.14)}
+  button.go{font:inherit;font-weight:600;background:var(--signal);color:#fff;border:0;border-radius:999px;padding:13px 26px;cursor:pointer;transition:transform .1s,box-shadow .2s}
+  button.go:hover{box-shadow:0 10px 22px -8px rgba(0,121,74,.55)}
   button.go:active{transform:scale(.98)}
   button.go:disabled{opacity:.5;cursor:default}
   #domain-result{margin-top:16px}
-  .dr{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surf2)}
+  .dr{border:1px solid var(--line);border-radius:11px;padding:16px;background:var(--surf2)}
   .dr-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .pill{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:999px}
-  .pill.good{background:rgba(10,138,79,.12);color:var(--good)}
-  .pill.warn{background:rgba(255,90,31,.13);color:var(--orange)}
-  .pill.bad{background:rgba(209,38,38,.12);color:var(--red)}
+  .pill{font-size:.74rem;font-weight:600;padding:4px 11px;border-radius:999px}
+  .pill.good{background:rgba(0,121,74,.12);color:var(--good)}
+  .pill.warn{background:rgba(180,83,9,.13);color:var(--amber)}
+  .pill.bad{background:rgba(194,54,47,.12);color:var(--red)}
   .pill.unknown{background:var(--line);color:var(--muted)}
   .dr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px}
   .dr-grid div span{display:block;font-size:.72rem;color:var(--faint);font-weight:600}
-  .dr-grid div b{font-size:.95rem}
+  .dr-grid div b{font-size:.95rem;font-weight:600}
   .pillar{border-top:1px solid var(--line);padding:18px 0}
-  .pillar:first-child{border-top:0}
-  .pillar h3{font-size:1.02rem;margin:0;font-weight:700}
-  .pillar .q{color:var(--faint);font-size:.82rem;font-weight:600;margin-top:2px}
+  .pillar:first-child{border-top:0;padding-top:6px}
+  .pillar-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .pillar h3{font-size:1.04rem;margin:0;font-weight:600}
+  .pillar .q{color:var(--faint);font-size:.82rem;font-weight:600}
   label.chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;cursor:pointer}
-  label.chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--orange);flex-shrink:0}
+  label.chk input{margin-top:2px;width:18px;height:18px;accent-color:var(--signal);flex-shrink:0}
   label.chk span{font-size:.95rem}
-  .scorebar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);margin-top:30px;padding:16px 0}
+  label.chk:hover span{color:var(--signal)}
+  .scorebar{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-top:1px solid var(--line);margin-top:30px;padding:16px 0}
   .score-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-  .score-num{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
-  .verdict{font-weight:700;font-size:1.05rem}
+  .score-num{font-size:2.4rem;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;color:var(--signal)}
+  .verdict{font-weight:600;font-size:1.05rem}
   .verdict small{display:block;font-weight:500;font-size:.84rem;color:var(--muted);margin-top:2px}
   .track{flex:1;min-width:160px;height:10px;background:var(--surf2);border-radius:999px;overflow:hidden}
-  .track i{display:block;height:100%;background:var(--orange);border-radius:999px;transition:width .35s cubic-bezier(.2,0,0,1),background .35s}
-  footer a{color:var(--ink);text-decoration-color:var(--orange)}
-  #next{margin-top:8px}
-  #next li{margin:6px 0;color:var(--muted);font-size:.92rem}
-  footer{margin:50px 0 40px;border-top:1px solid var(--line);padding-top:22px;color:var(--faint);font-size:.86rem}
+  .track i{display:block;height:100%;background:var(--signal);border-radius:999px;transition:width .35s cubic-bezier(.2,0,0,1),background .35s}
+  #next{margin-top:8px;padding-left:18px}
+  #next li{margin:7px 0;color:var(--muted);font-size:.92rem}
+  #next li b{color:var(--ink);font-weight:600}
+  footer{margin:46px 0 40px;border-top:1px solid var(--line);padding-top:22px;color:var(--faint);font-size:.86rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  footer img{height:22px;width:auto}
   footer a{font-weight:600}
-  @media (max-width:560px){.score-num{font-size:2rem}}
+  @media (max-width:560px){.score-num{font-size:2rem}.hero{padding:24px 0 56px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
+<header class="band">
+  <div class="wrap hero">
+    <a class="brand" href="https://tobilobaadeyemo.com" target="_blank" rel="noopener">
+      <img src="mark.png" alt="" width="22" height="28" /> Tobiloba Adeyemo
+    </a>
     <p class="kick">Trade Trust Check</p>
-    <h1>Verify before you trade.</h1>
+    <h1>Verify <em>before</em> you trade.</h1>
     <p class="lede">Cross-border trade fails on trust, not capital. This applies zero-trust to a counterparty: assume nothing, verify what you can, and see how exposed you are before you send money.</p>
     <span class="disclaimer">A structured verification aid. Not legal, financial, or compliance advice.</span>
-  </header>
+  </div>
+</header>
 
+<main>
+<div class="wrap">
   <!-- Step 1: live domain check -->
   <section class="card">
     <p class="step">Step 1 · Live signal</p>
@@ -128,10 +153,11 @@
   </section>
 
   <footer>
-    Built by <a href="https://tobilobaadeyemo.com" target="_blank" rel="noopener">Tobiloba Adeyemo</a>, Cloud Security Engineer. Open source, no data leaves your browser.
-    <a href="https://github.com/tobilobaadeyemo/trade-trust-check" target="_blank" rel="noopener">View on GitHub</a>.
+    <img src="mark.png" alt="" />
+    <span>Built by <a href="https://tobilobaadeyemo.com" target="_blank" rel="noopener">Tobiloba Adeyemo</a>, Cloud Security Engineer. Open source, no data leaves your browser. <a href="https://github.com/tobilobaadeyemo/trade-trust-check" target="_blank" rel="noopener">View on GitHub</a>.</span>
   </footer>
 </div>
+</main>
 
 <script>
 // ---- Verification rubric: 4 zero-trust pillars, transparent weights ----
@@ -171,7 +197,7 @@ const pc = document.getElementById("pillars");
 PILLARS.forEach((p, pi) => {
   const d = document.createElement("div");
   d.className = "pillar";
-  d.innerHTML = `<h3>${p.name}</h3><div class="q">${p.q}</div>`;
+  d.innerHTML = `<div class="pillar-head"><h3>${p.name}</h3><div class="q">${p.q}</div></div>`;
   p.items.forEach((it, ii) => {
     const id = `c_${pi}_${ii}`;
     const lab = document.createElement("label");
@@ -198,13 +224,14 @@ function recompute(){
 
   let v, sub, col;
   if (pct >= 80){ v="Strong verification"; sub="Proceed with normal caution and a written contract."; col="var(--good)"; }
-  else if (pct >= 55){ v="Partial verification"; sub="Close the gaps below before any funds move."; col="var(--orange)"; }
+  else if (pct >= 55){ v="Partial verification"; sub="Close the gaps below before any funds move."; col="var(--amber)"; }
   else if (pct >= 30){ v="Weak verification"; sub="High risk. Verify the flagged items before committing."; col="var(--red)"; }
   else { v="Unverified"; sub="Do not send money yet. Start with the items below."; col="var(--red)"; }
   const vEl = document.getElementById("verdict");
   vEl.style.color = col;
   vEl.innerHTML = `${v}<small id="verdict-sub">${sub}</small>`;
   document.getElementById("track").style.background = col;
+  document.getElementById("score").style.color = col;
 
   // top unmet by weight
   unmet.sort((a,b)=>b.w-a.w);
