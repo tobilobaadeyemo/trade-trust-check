@@ -6,46 +6,53 @@
 <title>Trade Trust Check · Verify a counterparty before you trade</title>
 <meta name="description" content="A free zero-trust verification aid for cross-border trade. Run a live domain check and score how verifiable a supplier or buyer is before you commit money." />
 <meta name="theme-color" content="#ffffff" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2300ff88'/%3E%3Cpath d='M9 16l5 5 9-10' stroke='%2304291b' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23fcfc62'/%3E%3Cpath d='M9 16l5 5 9-10' stroke='%23070912' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<meta property="og:image" content="https://tobilobaadeyemo.github.io/trade-trust-check/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://tobilobaadeyemo.github.io/trade-trust-check/og.png" />
 <meta property="og:title" content="Trade Trust Check" />
 <meta property="og:description" content="Apply zero-trust to a trade counterparty before you wire money. Live domain check plus a transparent verifiability score." />
 <meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
 <style>
+  /* Raptview house style: white, near-black ink, Plus Jakarta Sans, yellow pill
+     CTA, orange accent, soft grey surfaces. */
   :root{
-    --green:#00ff88; --ink-green:#00794a; --ink:#18181b; --muted:#52555e; --faint:#80848d;
-    --line:#e6e7eb; --surface:#fff; --surf2:#f3f4f6; --radius:18px;
-    --amber:#b45309; --red:#b91c1c;
+    --ink:#0b0e12; --muted:#5b616b; --faint:#878d97;
+    --line:#e0e3e9; --surface:#fff; --surf2:#edeff4; --radius:16px;
+    --yellow:#fcfc62; --on-yellow:#07090c; --orange:#ff5a1f;
+    --good:#0a8a4f; --amber:#c2410c; --red:#d12626;
   }
   *{box-sizing:border-box}
-  body{font-family:Manrope,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:#fff;margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{font-family:"Plus Jakarta Sans",-apple-system,Segoe UI,sans-serif;color:var(--ink);background:#fff;margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
   .wrap{max-width:880px;margin:0 auto;padding:0 20px}
-  a{color:var(--ink-green)}
+  a{color:var(--ink);text-decoration-color:var(--orange)}
   header{padding:48px 0 8px}
-  .kick{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-green)}
-  .kick::before{content:"";width:22px;height:2px;background:var(--ink-green);border-radius:2px}
-  h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.04;margin:14px 0 0}
+  .kick{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange)}
+  .kick::before{content:"";width:22px;height:2px;background:var(--orange);border-radius:2px}
+  h1{font-size:clamp(2.1rem,6vw,3.4rem);font-weight:800;letter-spacing:-.035em;line-height:1.02;margin:14px 0 0}
   .lede{color:var(--muted);font-size:1.05rem;max-width:48ch;margin:14px 0 0}
   .disclaimer{font-size:.8rem;color:var(--faint);background:var(--surf2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:inline-block;margin-top:18px}
-  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(20,22,27,.05),0 8px 24px -16px rgba(20,22,27,.18);padding:26px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 2px rgba(11,14,18,.05),0 10px 28px -18px rgba(11,14,18,.22);padding:26px}
   section{margin-top:26px}
   .step{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-  h2{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;margin:4px 0 0}
+  h2{font-size:1.4rem;font-weight:800;letter-spacing:-.025em;margin:4px 0 0}
   .sub{color:var(--muted);font-size:.92rem;margin:6px 0 0}
   .domain-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
   input[type=text]{flex:1;min-width:220px;font:inherit;font-size:1rem;padding:13px 16px;border:1px solid var(--line);border-radius:12px;outline:none}
-  input[type=text]:focus{border-color:var(--ink-green);box-shadow:0 0 0 3px rgba(0,121,74,.15)}
-  button.go{font:inherit;font-weight:700;background:var(--green);color:#04291b;border:0;border-radius:12px;padding:13px 22px;cursor:pointer;transition:transform .1s}
+  input[type=text]:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,90,31,.14)}
+  button.go{font:inherit;font-weight:700;background:var(--yellow);color:var(--on-yellow);border:0;border-radius:999px;padding:13px 24px;cursor:pointer;transition:transform .1s,box-shadow .2s;box-shadow:0 2px 0 rgba(11,14,18,.12)}
+  button.go:hover{box-shadow:0 4px 14px -4px rgba(252,252,98,.9)}
   button.go:active{transform:scale(.98)}
   button.go:disabled{opacity:.5;cursor:default}
   #domain-result{margin-top:16px}
   .dr{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surf2)}
   .dr-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .pill{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:999px}
-  .pill.good{background:rgba(0,121,74,.12);color:var(--ink-green)}
-  .pill.warn{background:#fef3c7;color:var(--amber)}
-  .pill.bad{background:#fee2e2;color:var(--red)}
+  .pill.good{background:rgba(10,138,79,.12);color:var(--good)}
+  .pill.warn{background:rgba(255,90,31,.13);color:var(--orange)}
+  .pill.bad{background:rgba(209,38,38,.12);color:var(--red)}
   .pill.unknown{background:var(--line);color:var(--muted)}
   .dr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px}
   .dr-grid div span{display:block;font-size:.72rem;color:var(--faint);font-weight:600}
@@ -55,7 +62,7 @@
   .pillar h3{font-size:1.02rem;margin:0;font-weight:700}
   .pillar .q{color:var(--faint);font-size:.82rem;font-weight:600;margin-top:2px}
   label.chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;cursor:pointer}
-  label.chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--ink-green);flex-shrink:0}
+  label.chk input{margin-top:3px;width:18px;height:18px;accent-color:var(--orange);flex-shrink:0}
   label.chk span{font-size:.95rem}
   .scorebar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);margin-top:30px;padding:16px 0}
   .score-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
@@ -63,7 +70,8 @@
   .verdict{font-weight:700;font-size:1.05rem}
   .verdict small{display:block;font-weight:500;font-size:.84rem;color:var(--muted);margin-top:2px}
   .track{flex:1;min-width:160px;height:10px;background:var(--surf2);border-radius:999px;overflow:hidden}
-  .track i{display:block;height:100%;background:var(--green);border-radius:999px;transition:width .35s cubic-bezier(.2,0,0,1)}
+  .track i{display:block;height:100%;background:var(--orange);border-radius:999px;transition:width .35s cubic-bezier(.2,0,0,1),background .35s}
+  footer a{color:var(--ink);text-decoration-color:var(--orange)}
   #next{margin-top:8px}
   #next li{margin:6px 0;color:var(--muted);font-size:.92rem}
   footer{margin:50px 0 40px;border-top:1px solid var(--line);padding-top:22px;color:var(--faint);font-size:.86rem}
@@ -189,13 +197,14 @@ function recompute(){
   document.getElementById("track").style.width = pct + "%";
 
   let v, sub, col;
-  if (pct >= 80){ v="Strong verification"; sub="Proceed with normal caution and a written contract."; col="var(--ink-green)"; }
-  else if (pct >= 55){ v="Partial verification"; sub="Close the gaps below before any funds move."; col="var(--amber)"; }
+  if (pct >= 80){ v="Strong verification"; sub="Proceed with normal caution and a written contract."; col="var(--good)"; }
+  else if (pct >= 55){ v="Partial verification"; sub="Close the gaps below before any funds move."; col="var(--orange)"; }
   else if (pct >= 30){ v="Weak verification"; sub="High risk. Verify the flagged items before committing."; col="var(--red)"; }
   else { v="Unverified"; sub="Do not send money yet. Start with the items below."; col="var(--red)"; }
   const vEl = document.getElementById("verdict");
   vEl.style.color = col;
   vEl.innerHTML = `${v}<small id="verdict-sub">${sub}</small>`;
+  document.getElementById("track").style.background = col;
 
   // top unmet by weight
   unmet.sort((a,b)=>b.w-a.w);
