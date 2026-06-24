@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://api.fontshare.com; font-src https://cdn.fontshare.com https://*.fontshare.com; img-src 'self' data:; connect-src https://rdap.org; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'" />
 <title>Trade Trust Check · Verify a counterparty before you trade</title>
 <meta name="description" content="A free zero-trust verification aid for cross-border trade. Run a live domain check and score how verifiable a supplier or buyer is before you commit money." />
 <meta name="theme-color" content="#0b0d0f" />
@@ -242,13 +243,18 @@ function recompute(){
 document.getElementById("pillars").addEventListener("change", recompute);
 
 // ---- Live domain check (RDAP, public, no key) ----
+// esc() neutralizes HTML so neither user input nor third-party RDAP data can
+// inject markup/script when interpolated into innerHTML (defense in depth).
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function yearsBetween(a,b){ return (b-a)/(365.25*24*3600*1000); }
 async function checkDomain(){
   const raw = document.getElementById("domain").value.trim().toLowerCase()
-    .replace(/^https?:\/\//,"").replace(/^www\./,"").replace(/\/.*$/,"");
+    .replace(/^https?:\/\//,"").replace(/^www\./,"").replace(/\/.*$/,"")
+    .replace(/[^a-z0-9.\-]/g,"")   // hostname charset only - removes HTML/JS metacharacters at the source
+    .slice(0,253);                 // max DNS name length
   const box = document.getElementById("domain-result");
   if (!raw || !raw.includes(".")){ box.innerHTML = `<div class="dr">Enter a domain like <b>supplier.com</b>.</div>`; return; }
-  box.innerHTML = `<div class="dr">Checking <b>${raw}</b> ...</div>`;
+  box.innerHTML = `<div class="dr">Checking <b>${esc(raw)}</b> ...</div>`;
   try{
     const r = await fetch("https://rdap.org/domain/" + encodeURIComponent(raw), { headers:{ "Accept":"application/rdap+json" }});
     if (!r.ok) throw new Error("not found");
@@ -257,7 +263,7 @@ async function checkDomain(){
     const reg = ev.registration ? new Date(ev.registration) : null;
     const exp = ev.expiration ? new Date(ev.expiration) : null;
     let registrar = "Unknown";
-    (d.entities||[]).forEach(en=>{ if((en.roles||[]).includes("registrar")){ const vc=(en.vcardArray||[])[1]||[]; vc.forEach(f=>{ if(f[0]==="fn") registrar=f[3]; }); }});
+    (d.entities||[]).forEach(en=>{ if((en.roles||[]).includes("registrar")){ const vc=(en.vcardArray||[])[1]||[]; vc.forEach(f=>{ if(f[0]==="fn" && f[3]) registrar=String(f[3]).slice(0,120); }); }});
     const ageYrs = reg ? yearsBetween(reg, new Date()) : null;
 
     let pillClass, pillText;
@@ -269,17 +275,17 @@ async function checkDomain(){
 
     const fmt = (dt)=> dt ? dt.toISOString().slice(0,10) : "—";
     box.innerHTML = `<div class="dr">
-      <div class="dr-top"><b>${raw}</b><span class="pill ${pillClass}">${pillText}</span></div>
+      <div class="dr-top"><b>${esc(raw)}</b><span class="pill ${pillClass}">${esc(pillText)}</span></div>
       <div class="dr-grid">
         <div><span>Registered</span><b>${fmt(reg)}</b></div>
         <div><span>Expires</span><b>${fmt(exp)}</b></div>
-        <div><span>Registrar</span><b>${registrar}</b></div>
+        <div><span>Registrar</span><b>${esc(registrar)}</b></div>
       </div>
       <p class="sub" style="margin-top:12px">${ageYrs!==null && ageYrs<1 ? "A domain this new is the single most common red flag in supplier fraud. Weight everything else heavily." : "Registration data is a signal, not proof. Confirm the business behind it."}</p>
     </div>`;
   } catch(e){
     domainScore = DOMAIN_MAX*0.3; domainKnown = false;
-    box.innerHTML = `<div class="dr"><div class="dr-top"><b>${raw}</b><span class="pill unknown">No record found</span></div>
+    box.innerHTML = `<div class="dr"><div class="dr-top"><b>${esc(raw)}</b><span class="pill unknown">No record found</span></div>
       <p class="sub" style="margin-top:10px">No public registration record returned. That is itself worth a question: verify the business through a registry or references instead.</p></div>`;
   }
   recompute();
